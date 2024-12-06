@@ -1,0 +1,11 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- checkout: self
+- script: |
+    python hello_world.py
+  displayName: 'Run Hello World script'
