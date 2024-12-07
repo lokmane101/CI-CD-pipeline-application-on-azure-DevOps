@@ -5,9 +5,23 @@ pool:
   name: 'Default'  # Make sure this matches your agent pool name
   demands:
     - agent.name -equals LOKMANE  # Replace with your actual agent name
-
 steps:
+# Step 1: Checkout the code
 - checkout: self
+
+# Step 2: Set up Docker build and push
+- task: Docker@2
+  inputs:
+    command: buildAndPush
+    repository: YOUR_ACR_NAME.azurecr.io/my-python-app
+    Dockerfile: '**/Dockerfile'
+    containerRegistry: 'AzureContainerRegistryConnection'
+    tags: |
+      latest
+      $(Build.BuildId)
+
+# Step 3: Run the Docker container (optional, for testing)
 - script: |
-    python hello_world.py
-  displayName: 'Run Hello World script'
+    docker run -p 4000:80 YOUR_ACR_NAME.azurecr.io/my-python-app:latest
+  displayName: 'Run Docker container'
+  condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
