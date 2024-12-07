@@ -15,7 +15,7 @@ steps:
     command: buildAndPush
     repository: YOUR_ACR_NAME.azurecr.io/my-python-app
     Dockerfile: '**/Dockerfile'
-    containerRegistry: 'Web_app_service'
+    containerRegistry: 'AzureContainerRegistryConnection'
     tags: |
       latest
       $(Build.BuildId)
