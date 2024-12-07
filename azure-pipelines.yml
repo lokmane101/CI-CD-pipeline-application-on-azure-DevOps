@@ -2,7 +2,9 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'Default'  # Make sure this matches your agent pool name
+  demands:
+    - agent.name -equals LOKMANE  # Replace with your actual agent name
 
 steps:
 - checkout: self
