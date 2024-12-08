@@ -13,7 +13,7 @@ steps:
 # Step 2: Log in to Azure and ACR
 - task: AzureCLI@2
   inputs:
-    azureSubscription: '<Your Azure Subscription>'  # Replace with your Azure DevOps service connection name
+    azureSubscription: 'AzureDockerConnection'  # Replace with your Azure DevOps service connection name
     scriptType: 'ps'
     scriptLocation: 'inlineScript'
     inlineScript: |
