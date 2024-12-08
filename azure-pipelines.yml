@@ -2,15 +2,24 @@ trigger:
 - main
 
 pool:
-  name: 'Default'
+  name: 'Default'  # Ensure this matches your agent pool name
   demands:
-    - agent.name -equals LOKMANE
+    - agent.name -equals LOKMANE  # Replace with your actual agent name
 
 steps:
 # Step 1: Checkout the code
 - checkout: self
 
-# Step 2: Build and push the Docker image
+# Step 2: Log in to Azure and ACR
+- task: AzureCLI@2
+  inputs:
+    azureSubscription: '<Your Azure Subscription>'  # Replace with your Azure DevOps service connection name
+    scriptType: 'ps'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      az acr login --name mycontainerregistry
+
+# Step 3: Build and push the Docker image
 - task: Docker@2
   inputs:
     command: buildAndPush
@@ -21,17 +30,7 @@ steps:
       latest
       $(Build.BuildId)
 
-# Step 3: Ensure Azure CLI is available
-- script: |
-    set PATH=%PATH%;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin
-  displayName: 'Add Azure CLI to PATH'
-
-# Step 4: Log in to ACR
-- script: |
-    az acr login --name mycontainerregistry
-  displayName: 'Log in to ACR'
-
-# Step 5: Run the Docker container with increased memory
+# Step 4: Run the Docker container with increased memory
 - script: |
     docker run -m 1g -p 4000:80 azurecontainerregistryconnection.azurecr.io/my-python-app:latest
   displayName: 'Run Docker container'
