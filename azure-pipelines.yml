@@ -2,27 +2,32 @@ trigger:
 - main
 
 pool:
-  name: 'Default'  # Make sure this matches your agent pool name
+  name: 'Default'
   demands:
-    - agent.name -equals LOKMANE  # Replace with your actual agent name
+    - agent.name -equals LOKMANE
+
 steps:
-# Step 1: Checkout the code
+# Étape 1 : Récupérer le code
 - checkout: self
 
-# Step 2: Set up Docker build and push
+# Étape 2 : Construire et pusher l'image Docker
 - task: Docker@2
   inputs:
     command: buildAndPush
-    repository: azurecontainerregistryconnection.azurecr.io/webapponazure
+    repository: mycontainerregistry.azurecr.io/my-python-app
     Dockerfile: '**/Dockerfile'
     containerRegistry: 'AzureDockerConnection'
     tags: |
       latest
       $(Build.BuildId)
 
-# Step 3: Run the Docker container (optional, for testing)
-#specefied ram 
+# Étape 3 : Se connecter à l'ACR
 - script: |
-    docker run -m 1g -p 4000:80 azurecontainerregistryconnection.azurecr.io/webapponazure:latest
+    az acr login --name mycontainerregistry
+  displayName: 'Log in to ACR'
+
+# Étape 4 : Exécuter le conteneur Docker avec mémoire augmentée
+- script: |
+    docker run -m 1g -p 4000:80 mycontainerregistry.azurecr.io/my-python-app:latest
   displayName: 'Run Docker container'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
