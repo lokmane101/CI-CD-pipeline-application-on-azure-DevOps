@@ -13,7 +13,7 @@ steps:
 - task: Docker@2
   inputs:
     command: buildAndPush
-    repository: YOUR_ACR_NAME.azurecr.io/my-python-app
+    repository: DockerRegesterConnection.azurecr.io/my-python-app
     Dockerfile: '**/Dockerfile'
     containerRegistry: 'AzureDockerConnection'
     tags: |
@@ -22,6 +22,6 @@ steps:
 
 # Step 3: Run the Docker container (optional, for testing)
 - script: |
-    docker run -p 4000:80 YOUR_ACR_NAME.azurecr.io/my-python-app:latest
+    docker run -p 4000:80 DockerRegesterConnection.azurecr.io/my-python-app:latest
   displayName: 'Run Docker container'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
