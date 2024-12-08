@@ -33,7 +33,7 @@ steps:
 # Step 4: Deploy to Azure App Service
 - task: AzureWebAppContainer@1
   inputs:
-    azureSubscription: 'AzureDockerConnection'  # Replace with your Azure service connection name for App Service
+    azureSubscription: 'Azureserviceconnection'  # Replace with your Azure service connection name for App Service
     appName: 'my-python-app-service'  # Replace with the name of your Azure App Service
     imageName: 'azurecontainerregistryconnection.azurecr.io/my-python-app'
     tag: 'latest'
