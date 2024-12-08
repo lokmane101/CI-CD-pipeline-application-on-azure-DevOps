@@ -13,7 +13,7 @@ steps:
 - task: Docker@2
   inputs:
     command: buildAndPush
-    repository: azurecontainerregistryconnection.azurecr.io/my-python-app
+    repository: azurecontainerregistryconnection.azurecr.io/WebAppOnAzure
     Dockerfile: '**/Dockerfile'
     containerRegistry: 'AzureDockerConnection'
     tags: |
@@ -23,6 +23,6 @@ steps:
 # Step 3: Run the Docker container (optional, for testing)
 #specefied ram 
 - script: |
-    docker run -m 1g -p 4000:80 azurecontainerregistryconnection.azurecr.io/my-python-app:latest
+    docker run -m 1g -p 4000:80 azurecontainerregistryconnection.azurecr.io/WebAppOnAzure:latest
   displayName: 'Run Docker container'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
