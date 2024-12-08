@@ -21,6 +21,7 @@ steps:
       $(Build.BuildId)
 
 # Step 3: Run the Docker container (optional, for testing)
+#specefied ram 
 - script: |
     docker run -m 1g -p 4000:80 AzureContainerRegistryConnection.azurecr.io/my-python-app:latest
   displayName: 'Run Docker container'
