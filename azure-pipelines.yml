@@ -7,27 +7,32 @@ pool:
     - agent.name -equals LOKMANE
 
 steps:
-# Étape 1 : Récupérer le code
+# Step 1: Checkout the code
 - checkout: self
 
-# Étape 2 : Construire et pusher l'image Docker
+# Step 2: Build and push the Docker image
 - task: Docker@2
   inputs:
     command: buildAndPush
-    repository: mycontainerregistry.azurecr.io/my-python-app
+    repository: azurecontainerregistryconnection.azurecr.io/my-python-app
     Dockerfile: '**/Dockerfile'
     containerRegistry: 'AzureDockerConnection'
     tags: |
       latest
       $(Build.BuildId)
 
-# Étape 3 : Se connecter à l'ACR
+# Step 3: Ensure Azure CLI is available
+- script: |
+    set PATH=%PATH%;C:\Program Files\Microsoft SDKs\Azure\CLI2\wbin
+  displayName: 'Add Azure CLI to PATH'
+
+# Step 4: Log in to ACR
 - script: |
     az acr login --name mycontainerregistry
   displayName: 'Log in to ACR'
 
-# Étape 4 : Exécuter le conteneur Docker avec mémoire augmentée
+# Step 5: Run the Docker container with increased memory
 - script: |
-    docker run -m 1g -p 4000:80 mycontainerregistry.azurecr.io/my-python-app:latest
+    docker run -m 1g -p 4000:80 azurecontainerregistryconnection.azurecr.io/my-python-app:latest
   displayName: 'Run Docker container'
   condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
